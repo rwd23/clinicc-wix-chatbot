@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { clinicAssistantConfig } from "@/lib/clinic-config";
+import { groundingRules, verifiedAnswers } from "@/lib/clinic-knowledge";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -27,6 +28,14 @@ function buildConversationTranscript(messages: ChatMessage[]) {
 
 function normalize(input: string) {
   return input.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+}
+
+function findVerifiedAnswer(userMessage: string) {
+  const normalized = normalize(userMessage);
+
+  return verifiedAnswers.find((entry) =>
+    entry.questionPatterns.some((pattern) => normalized.includes(normalize(pattern)))
+  );
 }
 
 function getMatchedRoutes(userMessage: string) {
@@ -148,6 +157,14 @@ export async function POST(request: Request) {
     latestUserMessage =
       [...messages].reverse().find((message) => message.role === "user")?.content ?? "";
     const { contextBlock, suggestions } = buildRouteContext(latestUserMessage);
+    const verifiedAnswer = findVerifiedAnswer(latestUserMessage);
+
+    if (verifiedAnswer) {
+      return NextResponse.json({
+        reply: verifiedAnswer.answer,
+        suggestions: verifiedAnswer.suggestions ?? suggestions
+      });
+    }
 
     if (!client) {
       const fallback = buildFallbackReply(latestUserMessage);
@@ -156,8 +173,8 @@ export async function POST(request: Request) {
 
     const response = await client.responses.create({
       model: process.env.OPENAI_MODEL ?? "gpt-4.1-mini",
-      instructions: `${clinicAssistantConfig.systemPrompt}\n\n${clinicAssistantConfig.clinicFacts.join("\n")}\n\nRelevant treatment guidance:\n${contextBlock}`,
-      input: `Conversation so far:\n\n${buildConversationTranscript(messages)}\n\nWrite the next assistant reply as Cara for the Clinic C website widget. Keep it concise, premium, reassuring, and conversion-aware. Follow the route conversion strategy carefully when deciding whether to suggest direct booking, consultation, or enquiry.`,
+      instructions: `${clinicAssistantConfig.systemPrompt}\n\n${clinicAssistantConfig.clinicFacts.join("\n")}\n\nGrounding rules:\n${groundingRules.join("\n")}\n\nRelevant treatment guidance:\n${contextBlock}`,
+      input: `Conversation so far:\n\n${buildConversationTranscript(messages)}\n\nWrite the next assistant reply as Cara for the Clinic C website widget. Keep it concise, premium, reassuring, and conversion-aware. Follow the route conversion strategy carefully when deciding whether to suggest direct booking, consultation, or enquiry. If the answer is not verified, avoid stating uncertain operational details as fact.`,
       max_output_tokens: 400
     });
 

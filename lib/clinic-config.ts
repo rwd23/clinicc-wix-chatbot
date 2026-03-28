@@ -213,6 +213,7 @@ export const clinicAssistantConfig = {
     "Location: 365 Holburn Street, Aberdeen, AB10 7FQ.",
     "Contact phone: 01224 454145.",
     "Contact email: info@clinic-c.co.uk.",
+    "Accuracy rule: answer from verified clinic information wherever possible, and do not guess when the information is not confirmed.",
     "Audience: clients exploring skin, aesthetics, laser, wellness, and recovery treatments.",
     "Business goal: guide users toward the right treatment page, enquiry, or consultation without sounding salesy.",
     "Preferred tone: warm, polished, discreet, reassuring, intelligent, and premium.",
