@@ -8,6 +8,16 @@ export type VerifiedAnswer = {
   }>;
 };
 
+export const clinicOpeningHours = {
+  monday: "Closed",
+  tuesday: "10am to 6pm",
+  wednesday: "11am to 7pm",
+  thursday: "12pm to 8pm",
+  friday: "9am to 2pm",
+  saturday: "10am to 5pm",
+  sunday: "Closed"
+} as const;
+
 export const verifiedAnswers: VerifiedAnswer[] = [
   {
     id: "contact-details",

@@ -1,7 +1,11 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { clinicAssistantConfig } from "@/lib/clinic-config";
-import { groundingRules, verifiedAnswers } from "@/lib/clinic-knowledge";
+import {
+  clinicOpeningHours,
+  groundingRules,
+  verifiedAnswers
+} from "@/lib/clinic-knowledge";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -36,6 +40,98 @@ function findVerifiedAnswer(userMessage: string) {
   return verifiedAnswers.find((entry) =>
     entry.questionPatterns.some((pattern) => normalized.includes(normalize(pattern)))
   );
+}
+
+function formatDateForClinic(date: Date) {
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/London"
+  }).format(date);
+}
+
+function getClinicWeekdayKey(date: Date) {
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    timeZone: "Europe/London"
+  })
+    .format(date)
+    .toLowerCase() as keyof typeof clinicOpeningHours;
+}
+
+function getRelativeClinicDate(offsetDays: number) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
+  const parts = formatter.formatToParts(new Date());
+  const year = Number(parts.find((part) => part.type === "year")?.value);
+  const month = Number(parts.find((part) => part.type === "month")?.value);
+  const day = Number(parts.find((part) => part.type === "day")?.value);
+  return new Date(Date.UTC(year, month - 1, day + offsetDays, 12, 0, 0));
+}
+
+function findDateAwareOpeningHours(userMessage: string) {
+  const normalized = normalize(userMessage);
+  const referencesOpening =
+    normalized.includes("open") ||
+    normalized.includes("opening") ||
+    normalized.includes("hours") ||
+    normalized.includes("close");
+
+  if (!referencesOpening) {
+    return null;
+  }
+
+  const scheduleSentence =
+    "Clinic C operates mainly on an appointment-only basis, so it is always sensible to contact the clinic if you want to confirm availability.";
+
+  if (normalized.includes("today")) {
+    const date = getRelativeClinicDate(0);
+    const weekday = getClinicWeekdayKey(date);
+    const hours = clinicOpeningHours[weekday];
+    return {
+      reply: `Today is ${formatDateForClinic(date)}. Clinic C is generally ${hours === "Closed" ? "closed" : `open ${hours}`} on ${weekday}. ${scheduleSentence}`,
+      suggestions: [
+        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
+      ]
+    };
+  }
+
+  if (normalized.includes("tomorrow")) {
+    const date = getRelativeClinicDate(1);
+    const weekday = getClinicWeekdayKey(date);
+    const hours = clinicOpeningHours[weekday];
+    return {
+      reply: `Tomorrow is ${formatDateForClinic(date)}. Clinic C is generally ${hours === "Closed" ? "closed" : `open ${hours}`} on ${weekday}. ${scheduleSentence}`,
+      suggestions: [
+        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
+      ]
+    };
+  }
+
+  const weekdayNames = Object.keys(clinicOpeningHours) as Array<
+    keyof typeof clinicOpeningHours
+  >;
+  const matchedWeekday = weekdayNames.find((weekday) =>
+    normalized.includes(weekday)
+  );
+
+  if (!matchedWeekday) {
+    return null;
+  }
+
+  const hours = clinicOpeningHours[matchedWeekday];
+  return {
+    reply: `Clinic C is generally ${hours === "Closed" ? "closed" : `open ${hours}`} on ${matchedWeekday}. ${scheduleSentence}`,
+    suggestions: [
+      { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
+    ]
+  };
 }
 
 function getMatchedRoutes(userMessage: string) {
@@ -157,6 +253,10 @@ export async function POST(request: Request) {
     latestUserMessage =
       [...messages].reverse().find((message) => message.role === "user")?.content ?? "";
     const { contextBlock, suggestions } = buildRouteContext(latestUserMessage);
+    const dateAwareOpeningAnswer = findDateAwareOpeningHours(latestUserMessage);
+    if (dateAwareOpeningAnswer) {
+      return NextResponse.json(dateAwareOpeningAnswer);
+    }
     const verifiedAnswer = findVerifiedAnswer(latestUserMessage);
 
     if (verifiedAnswer) {
