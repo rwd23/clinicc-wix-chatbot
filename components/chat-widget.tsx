@@ -18,6 +18,7 @@ type Message = {
 };
 
 const STORAGE_KEY = "clinicc-widget-messages";
+const BUILD_LABEL = "Knowledge v3";
 let messageCounter = 0;
 
 function formatDateForClinic(date: Date) {
@@ -56,16 +57,10 @@ function getRelativeClinicDate(offsetDays: number) {
 function buildOperationalReply(text: string) {
   const deterministicAnswer = findDeterministicClinicAnswer(text);
 
-  if (deterministicAnswer?.id === "parking") {
-    return {
-      reply: deterministicAnswer.answer,
-      suggestions: deterministicAnswer.suggestions ?? [
-        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
-      ]
-    };
-  }
-
-  if (deterministicAnswer?.id === "opening-hours") {
+  if (
+    deterministicAnswer &&
+    deterministicAnswer.id !== "opening-hours"
+  ) {
     return {
       reply: deterministicAnswer.answer,
       suggestions: deterministicAnswer.suggestions ?? [
@@ -297,6 +292,7 @@ export function ChatWidget() {
         </header>
 
         <div className="widget-tools">
+          <span className="build-badge">{BUILD_LABEL}</span>
           <button className="reset-button" onClick={resetChat} type="button">
             Reset chat
           </button>
@@ -348,6 +344,27 @@ export function ChatWidget() {
         </div>
 
         <div className="prompt-strip" aria-label="Suggested prompts">
+          <button
+            className="prompt-pill prompt-pill-fact"
+            onClick={() => sendMessage("Do you offer parking?")}
+            type="button"
+          >
+            Parking
+          </button>
+          <button
+            className="prompt-pill prompt-pill-fact"
+            onClick={() => sendMessage("What are your opening hours?")}
+            type="button"
+          >
+            Opening hours
+          </button>
+          <button
+            className="prompt-pill prompt-pill-fact"
+            onClick={() => sendMessage("What is your cancellation policy?")}
+            type="button"
+          >
+            Cancellation policy
+          </button>
           {clinicAssistantConfig.quickPrompts.map((prompt) => (
             <button
               className="prompt-pill"
