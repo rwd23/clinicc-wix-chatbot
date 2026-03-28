@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { clinicAssistantConfig } from "@/lib/clinic-config";
+import { clinicOpeningHours } from "@/lib/clinic-knowledge";
 
 type Message = {
   id: string;
@@ -15,6 +16,145 @@ type Message = {
 
 const STORAGE_KEY = "clinicc-widget-messages";
 let messageCounter = 0;
+
+function normalize(input: string) {
+  return input.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+}
+
+function hasKeyword(normalized: string, values: string[]) {
+  return values.some((value) => normalized.includes(normalize(value)));
+}
+
+function formatDateForClinic(date: Date) {
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/London"
+  }).format(date);
+}
+
+function getClinicWeekdayKey(date: Date) {
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    timeZone: "Europe/London"
+  })
+    .format(date)
+    .toLowerCase() as keyof typeof clinicOpeningHours;
+}
+
+function getRelativeClinicDate(offsetDays: number) {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
+  const parts = formatter.formatToParts(new Date());
+  const year = Number(parts.find((part) => part.type === "year")?.value);
+  const month = Number(parts.find((part) => part.type === "month")?.value);
+  const day = Number(parts.find((part) => part.type === "day")?.value);
+  return new Date(Date.UTC(year, month - 1, day + offsetDays, 12, 0, 0));
+}
+
+function buildOperationalReply(text: string) {
+  const normalized = normalize(text);
+
+  if (
+    hasKeyword(normalized, [
+      "parking",
+      "park",
+      "car park",
+      "onsite parking",
+      "on site parking"
+    ])
+  ) {
+    return {
+      reply:
+        "Clinic C offers free parking right outside the clinic and on the surrounding streets, including Holburn Street, Balmoral Road, and Hardgate.",
+      suggestions: [
+        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
+      ]
+    };
+  }
+
+  const referencesOpening = hasKeyword(normalized, [
+    "open",
+    "opening",
+    "hours",
+    "close",
+    "closed"
+  ]);
+
+  if (!referencesOpening) {
+    return null;
+  }
+
+  const scheduleSentence =
+    "Clinic C operates mainly on an appointment-only basis, so it is always sensible to contact the clinic if you want to confirm availability.";
+
+  if (normalized.includes("today")) {
+    const date = getRelativeClinicDate(0);
+    const weekday = getClinicWeekdayKey(date);
+    const hours = clinicOpeningHours[weekday];
+    return {
+      reply: `Today is ${formatDateForClinic(date)}. Clinic C is generally ${hours === "Closed" ? "closed" : `open ${hours}`} on ${weekday}. ${scheduleSentence}`,
+      suggestions: [
+        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
+      ]
+    };
+  }
+
+  if (normalized.includes("tomorrow")) {
+    const date = getRelativeClinicDate(1);
+    const weekday = getClinicWeekdayKey(date);
+    const hours = clinicOpeningHours[weekday];
+    return {
+      reply: `Tomorrow is ${formatDateForClinic(date)}. Clinic C is generally ${hours === "Closed" ? "closed" : `open ${hours}`} on ${weekday}. ${scheduleSentence}`,
+      suggestions: [
+        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
+      ]
+    };
+  }
+
+  const weekdayNames = Object.keys(clinicOpeningHours) as Array<
+    keyof typeof clinicOpeningHours
+  >;
+  const matchedWeekday = weekdayNames.find((weekday) =>
+    normalized.includes(weekday)
+  );
+
+  if (matchedWeekday) {
+    const hours = clinicOpeningHours[matchedWeekday];
+    return {
+      reply: `Clinic C is generally ${hours === "Closed" ? "closed" : `open ${hours}`} on ${matchedWeekday}. ${scheduleSentence}`,
+      suggestions: [
+        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
+      ]
+    };
+  }
+
+  if (
+    hasKeyword(normalized, [
+      "opening hours",
+      "hours",
+      "what time do you open",
+      "what time do you close",
+      "when are you open"
+    ])
+  ) {
+    return {
+      reply:
+        "Clinic C operates mainly on an appointment-only basis. General opening hours are Monday closed, Tuesday 10am to 6pm, Wednesday 11am to 7pm, Thursday 12pm to 8pm, Friday 9am to 2pm, Saturday 10am to 5pm, and Sunday closed.",
+      suggestions: [
+        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
+      ]
+    };
+  }
+
+  return null;
+}
 
 function createMessageId(prefix: "user" | "assistant") {
   messageCounter += 1;
@@ -76,6 +216,19 @@ export function ChatWidget() {
     const nextMessages = [...messages, createUserMessage(trimmed)];
     setMessages(nextMessages);
     setDraft("");
+
+    const operationalReply = buildOperationalReply(trimmed);
+    if (operationalReply) {
+      setMessages((current) => [
+        ...current,
+        {
+          ...createAssistantMessage(operationalReply.reply),
+          suggestions: operationalReply.suggestions
+        }
+      ]);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
