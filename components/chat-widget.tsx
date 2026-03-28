@@ -209,6 +209,13 @@ export function ChatWidget() {
 
   const canSend = draft.trim().length > 0 && !isLoading;
 
+  function resetChat() {
+    window.localStorage.removeItem(STORAGE_KEY);
+    setDraft("");
+    setIsLoading(false);
+    setMessages([createAssistantMessage(clinicAssistantConfig.greeting)]);
+  }
+
   async function sendMessage(text: string) {
     const trimmed = text.trim();
     if (!trimmed || isLoading) return;
@@ -292,6 +299,12 @@ export function ChatWidget() {
             {clinicAssistantConfig.status}
           </div>
         </header>
+
+        <div className="widget-tools">
+          <button className="reset-button" onClick={resetChat} type="button">
+            Reset chat
+          </button>
+        </div>
 
         <div className="widget-banner">
           <span>Powered by Clinic C AI</span>
