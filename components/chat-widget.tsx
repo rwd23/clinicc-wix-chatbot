@@ -2,7 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { clinicAssistantConfig } from "@/lib/clinic-config";
-import { clinicOpeningHours } from "@/lib/clinic-knowledge";
+import {
+  clinicOpeningHours,
+  findDeterministicClinicAnswer
+} from "@/lib/clinic-knowledge";
 
 type Message = {
   id: string;
@@ -16,14 +19,6 @@ type Message = {
 
 const STORAGE_KEY = "clinicc-widget-messages";
 let messageCounter = 0;
-
-function normalize(input: string) {
-  return input.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
-}
-
-function hasKeyword(normalized: string, values: string[]) {
-  return values.some((value) => normalized.includes(normalize(value)));
-}
 
 function formatDateForClinic(date: Date) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -59,33 +54,34 @@ function getRelativeClinicDate(offsetDays: number) {
 }
 
 function buildOperationalReply(text: string) {
-  const normalized = normalize(text);
+  const deterministicAnswer = findDeterministicClinicAnswer(text);
 
-  if (
-    hasKeyword(normalized, [
-      "parking",
-      "park",
-      "car park",
-      "onsite parking",
-      "on site parking"
-    ])
-  ) {
+  if (deterministicAnswer?.id === "parking") {
     return {
-      reply:
-        "Clinic C offers free parking right outside the clinic and on the surrounding streets, including Holburn Street, Balmoral Road, and Hardgate.",
-      suggestions: [
+      reply: deterministicAnswer.answer,
+      suggestions: deterministicAnswer.suggestions ?? [
         { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
       ]
     };
   }
 
-  const referencesOpening = hasKeyword(normalized, [
+  if (deterministicAnswer?.id === "opening-hours") {
+    return {
+      reply: deterministicAnswer.answer,
+      suggestions: deterministicAnswer.suggestions ?? [
+        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
+      ]
+    };
+  }
+
+  const normalized = text.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+  const referencesOpening = [
     "open",
     "opening",
     "hours",
     "close",
     "closed"
-  ]);
+  ].some((value) => normalized.includes(value));
 
   if (!referencesOpening) {
     return null;
@@ -136,13 +132,13 @@ function buildOperationalReply(text: string) {
   }
 
   if (
-    hasKeyword(normalized, [
+    [
       "opening hours",
       "hours",
       "what time do you open",
       "what time do you close",
       "when are you open"
-    ])
+    ].some((value) => normalized.includes(value))
   ) {
     return {
       reply:

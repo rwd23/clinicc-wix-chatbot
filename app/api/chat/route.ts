@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { clinicAssistantConfig } from "@/lib/clinic-config";
 import {
   clinicOpeningHours,
+  findDeterministicClinicAnswer,
   groundingRules,
   verifiedAnswers
 } from "@/lib/clinic-knowledge";
@@ -34,16 +35,8 @@ function normalize(input: string) {
   return input.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
 }
 
-function hasKeyword(normalized: string, values: string[]) {
-  return values.some((value) => normalized.includes(normalize(value)));
-}
-
 function findVerifiedAnswer(userMessage: string) {
-  const normalized = normalize(userMessage);
-
-  return verifiedAnswers.find((entry) =>
-    entry.questionPatterns.some((pattern) => normalized.includes(normalize(pattern)))
-  );
+  return findDeterministicClinicAnswer(userMessage);
 }
 
 function formatDateForClinic(date: Date) {
@@ -81,13 +74,13 @@ function getRelativeClinicDate(offsetDays: number) {
 
 function findDateAwareOpeningHours(userMessage: string) {
   const normalized = normalize(userMessage);
-  const referencesOpening = hasKeyword(normalized, [
+  const referencesOpening = [
     "open",
     "opening",
     "hours",
     "close",
     "closed"
-  ]);
+  ].some((value) => normalized.includes(value));
 
   if (!referencesOpening) {
     return null;
@@ -138,48 +131,6 @@ function findDateAwareOpeningHours(userMessage: string) {
       { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
     ]
   };
-}
-
-function findOperationalAnswer(userMessage: string) {
-  const normalized = normalize(userMessage);
-
-  if (
-    hasKeyword(normalized, [
-      "parking",
-      "park",
-      "car park",
-      "onsite parking",
-      "on site parking"
-    ])
-  ) {
-    return {
-      reply:
-        "Clinic C offers free parking right outside the clinic and on the surrounding streets, including Holburn Street, Balmoral Road, and Hardgate.",
-      suggestions: [
-        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
-      ]
-    };
-  }
-
-  if (
-    hasKeyword(normalized, [
-      "opening hours",
-      "hours",
-      "what time do you open",
-      "what time do you close",
-      "when are you open"
-    ])
-  ) {
-    return {
-      reply:
-        "Clinic C operates mainly on an appointment-only basis. General opening hours are Monday closed, Tuesday 10am to 6pm, Wednesday 11am to 7pm, Thursday 12pm to 8pm, Friday 9am to 2pm, Saturday 10am to 5pm, and Sunday closed.",
-      suggestions: [
-        { label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }
-      ]
-    };
-  }
-
-  return null;
 }
 
 function getMatchedRoutes(userMessage: string) {
@@ -236,30 +187,6 @@ Consultation note: ${route.consultationNote}
 function buildFallbackReply(userMessage: string) {
   const normalized = normalize(userMessage);
   const { suggestions } = buildRouteContext(userMessage);
-
-  if (hasKeyword(normalized, ["parking", "park", "car park"])) {
-    return {
-      reply:
-        "Clinic C offers free parking right outside the clinic and on the surrounding streets, including Holburn Street, Balmoral Road, and Hardgate.",
-      suggestions: [{ label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }]
-    };
-  }
-
-  if (
-    hasKeyword(normalized, [
-      "opening hours",
-      "hours",
-      "what time do you open",
-      "what time do you close",
-      "when are you open"
-    ])
-  ) {
-    return {
-      reply:
-        "Clinic C operates mainly on an appointment-only basis. General opening hours are Monday closed, Tuesday 10am to 6pm, Wednesday 11am to 7pm, Thursday 12pm to 8pm, Friday 9am to 2pm, Saturday 10am to 5pm, and Sunday closed.",
-      suggestions: [{ label: "Contact Clinic C", url: clinicAssistantConfig.contactUrl }]
-    };
-  }
 
   if (normalized.includes("urgent") || normalized.includes("emergency") || normalized.includes("pain")) {
     return {
@@ -325,10 +252,6 @@ export async function POST(request: Request) {
     latestUserMessage =
       [...messages].reverse().find((message) => message.role === "user")?.content ?? "";
     const { contextBlock, suggestions } = buildRouteContext(latestUserMessage);
-    const operationalAnswer = findOperationalAnswer(latestUserMessage);
-    if (operationalAnswer) {
-      return NextResponse.json(operationalAnswer);
-    }
     const dateAwareOpeningAnswer = findDateAwareOpeningHours(latestUserMessage);
     if (dateAwareOpeningAnswer) {
       return NextResponse.json(dateAwareOpeningAnswer);

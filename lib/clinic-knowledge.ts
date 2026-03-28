@@ -450,3 +450,41 @@ export const groundingRules = [
   "For uncertain operational questions such as parking, access, exact availability, or opening hours, say clearly that you do not have a verified answer and direct the user to contact the clinic.",
   "When a policy question is answered from the website terms, keep the wording faithful to the published policy and avoid softening or expanding it."
 ] as const;
+
+function normalize(input: string) {
+  return input.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+}
+
+function containsAll(normalized: string, parts: string[]) {
+  return parts.every((part) => normalized.includes(normalize(part)));
+}
+
+export function findDeterministicClinicAnswer(userMessage: string) {
+  const normalized = normalize(userMessage);
+
+  if (
+    containsAll(normalized, ["offer", "parking"]) ||
+    containsAll(normalized, ["have", "parking"]) ||
+    containsAll(normalized, ["onsite", "parking"]) ||
+    containsAll(normalized, ["on site", "parking"]) ||
+    normalized.includes("car park") ||
+    normalized.includes("parking")
+  ) {
+    return verifiedAnswers.find((answer) => answer.id === "parking") ?? null;
+  }
+
+  if (
+    normalized.includes("open today") ||
+    normalized.includes("opening hours") ||
+    normalized.includes("what time do you open") ||
+    normalized.includes("what time do you close") ||
+    normalized.includes("when are you open") ||
+    normalized.includes("hours")
+  ) {
+    return verifiedAnswers.find((answer) => answer.id === "opening-hours") ?? null;
+  }
+
+  return verifiedAnswers.find((entry) =>
+    entry.questionPatterns.some((pattern) => normalized.includes(normalize(pattern)))
+  ) ?? null;
+}
