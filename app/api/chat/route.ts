@@ -161,7 +161,7 @@ export async function POST(request: Request) {
       max_output_tokens: 400
     });
 
-    const reply = response.output_text?.trim();
+    const reply = typeof response.output_text === "string" ? response.output_text.trim() : "";
 
     if (!reply) {
       return NextResponse.json(buildFallbackReply(latestUserMessage));

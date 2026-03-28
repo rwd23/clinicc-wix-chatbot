@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { clinicAssistantConfig } from "@/lib/clinic-config";
 
 type Message = {
@@ -14,10 +14,16 @@ type Message = {
 };
 
 const STORAGE_KEY = "clinicc-widget-messages";
+let messageCounter = 0;
+
+function createMessageId(prefix: "user" | "assistant") {
+  messageCounter += 1;
+  return `${prefix}-${messageCounter}`;
+}
 
 function createAssistantMessage(content: string): Message {
   return {
-    id: crypto.randomUUID(),
+    id: createMessageId("assistant"),
     role: "assistant",
     content
   };
@@ -25,7 +31,7 @@ function createAssistantMessage(content: string): Message {
 
 function createUserMessage(content: string): Message {
   return {
-    id: crypto.randomUUID(),
+    id: createMessageId("user"),
     role: "user",
     content
   };
@@ -113,8 +119,6 @@ export function ChatWidget() {
     }
   }
 
-  const quickPrompts = useMemo(() => clinicAssistantConfig.quickPrompts, []);
-
   return (
     <section className="widget-shell">
       <div className="widget-card">
@@ -182,7 +186,7 @@ export function ChatWidget() {
         </div>
 
         <div className="prompt-strip" aria-label="Suggested prompts">
-          {quickPrompts.map((prompt) => (
+          {clinicAssistantConfig.quickPrompts.map((prompt) => (
             <button
               className="prompt-pill"
               key={prompt.label}
