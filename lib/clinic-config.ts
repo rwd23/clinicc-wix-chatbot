@@ -21,7 +21,7 @@ export type TreatmentRoute = {
 export const clinicAssistantConfig = {
   assistantName: "Cara",
   clinicName: "Clinic C",
-  subtitle: "Your personal aesthetic concierge",
+  subtitle: "Test Build 21:30",
   status: "Online",
   greeting:
     "Welcome to Clinic C. I'm Cara, your personal aesthetic concierge. Whether you're exploring treatment for the first time or ready to take the next step, I'll help you find the option that feels right for your goals.",
