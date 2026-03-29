@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { clinicAssistantConfig } from "@/lib/clinic-config";
 import {
+  clinicPriceListUrl,
   clinicOpeningHours,
   findDeterministicClinicAnswer
 } from "@/lib/clinic-knowledge";
@@ -145,6 +146,19 @@ function buildOperationalReply(text: string) {
   }
 
   return null;
+}
+
+function formatMessageForDisplay(content: string) {
+  return content
+    .replaceAll(
+      `You can also view the full Clinic C pricing guide here: ${clinicPriceListUrl}`,
+      "You can also view the full Clinic C pricing guide using the button below."
+    )
+    .replaceAll(
+      `Clinic C pricing guide here: ${clinicPriceListUrl}`,
+      "Clinic C pricing guide available via the button below."
+    )
+    .replaceAll(clinicPriceListUrl, "");
 }
 
 function createMessageId(prefix: "user" | "assistant") {
@@ -311,7 +325,7 @@ export function ChatWidget() {
             >
               {message.role === "assistant" && <span className="speaker-label">{clinicAssistantConfig.assistantName}</span>}
               <div className="message-bubble">
-                <p>{message.content}</p>
+                <p>{formatMessageForDisplay(message.content).trim()}</p>
                 {!!message.suggestions?.length && (
                   <div className="message-actions">
                     {message.suggestions.map((suggestion) => (
