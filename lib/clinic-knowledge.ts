@@ -518,7 +518,7 @@ export function findDeterministicClinicAnswer(userMessage: string) {
       return {
         id: `price-${matchedPrice.id}`,
         questionPatterns: matchedPrice.aliases,
-        answer: `${matchedPrice.answer} You can also view the full Clinic C pricing guide here: ${clinicPriceListUrl}`,
+        answer: `${matchedPrice.answer} You can also view the full Clinic C pricing guide using the button below.`,
         suggestions: [
           {
             label: "Open Pricing Guide",
@@ -531,7 +531,8 @@ export function findDeterministicClinicAnswer(userMessage: string) {
     return {
       id: "price-guide",
       questionPatterns: ["price", "cost", "pricing", "how much"],
-      answer: `You can view the full Clinic C pricing guide here: ${clinicPriceListUrl}`,
+      answer:
+        "You can view the full Clinic C pricing guide using the button below.",
       suggestions: [
         {
           label: "Open Pricing Guide",
