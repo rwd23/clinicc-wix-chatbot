@@ -365,6 +365,13 @@ export function ChatWidget() {
           >
             Cancellation policy
           </button>
+          <button
+            className="prompt-pill prompt-pill-fact"
+            onClick={() => sendMessage("How much is Hydrafacial?")}
+            type="button"
+          >
+            HydraFacial price
+          </button>
           {clinicAssistantConfig.quickPrompts.map((prompt) => (
             <button
               className="prompt-pill"

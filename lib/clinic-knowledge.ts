@@ -8,6 +8,15 @@ export type VerifiedAnswer = {
   }>;
 };
 
+export type TreatmentPrice = {
+  id: string;
+  aliases: string[];
+  answer: string;
+};
+
+export const clinicPriceListUrl =
+  "https://www.clinicc.co.uk/_files/ugd/2d1435_5bbb0b8d019b42128cac3214d5d37b19.pdf";
+
 export const clinicOpeningHours = {
   monday: "Closed",
   tuesday: "10am to 6pm",
@@ -444,6 +453,39 @@ export const verifiedAnswers: VerifiedAnswer[] = [
   }
 ];
 
+export const treatmentPrices: TreatmentPrice[] = [
+  {
+    id: "hydrafacial",
+    aliases: ["hydrafacial", "hydra facial"],
+    answer:
+      "Clinic C's published prices for HydraFacial are: HydraFacial Skin for Life £160, HydraFacial Perk Lip & Eye £220, and HydraFacial Complete £260."
+  },
+  {
+    id: "anti-wrinkle",
+    aliases: ["anti wrinkle", "anti-wrinkle", "botox", "wrinkle injections"],
+    answer:
+      "Clinic C's published prices for anti-wrinkle injections are from £160 for 1 area and from £325 for 3 areas."
+  },
+  {
+    id: "profhilo",
+    aliases: ["profhilo"],
+    answer:
+      "Clinic C's published prices for Profhilo are £325 for 1 course and £585 for a course of 2."
+  },
+  {
+    id: "jalupro",
+    aliases: ["jalupro"],
+    answer:
+      "Clinic C's published prices for Jalupro are Jalupro Classic £200, Jalupro HMW £250, and Jalupro plus Botulinum Toxin £350."
+  },
+  {
+    id: "cryotherapy",
+    aliases: ["cryotherapy", "whole body cryotherapy"],
+    answer:
+      "Clinic C's published prices for whole body cryotherapy are £35 for a single session, £160 for a course of 5, and £300 for a course of 10."
+  }
+] as const;
+
 export const groundingRules = [
   "If a question matches verified clinic information, use that answer instead of improvising.",
   "If an answer is not verified, do not guess or make up details.",
@@ -461,6 +503,43 @@ function containsAll(normalized: string, parts: string[]) {
 
 export function findDeterministicClinicAnswer(userMessage: string) {
   const normalized = normalize(userMessage);
+  const isPriceQuestion =
+    normalized.includes("how much") ||
+    normalized.includes("price") ||
+    normalized.includes("cost") ||
+    normalized.includes("pricing");
+
+  if (isPriceQuestion) {
+    const matchedPrice = treatmentPrices.find((entry) =>
+      entry.aliases.some((alias) => normalized.includes(normalize(alias)))
+    );
+
+    if (matchedPrice) {
+      return {
+        id: `price-${matchedPrice.id}`,
+        questionPatterns: matchedPrice.aliases,
+        answer: `${matchedPrice.answer} You can also view the full Clinic C pricing guide here: ${clinicPriceListUrl}`,
+        suggestions: [
+          {
+            label: "Open Pricing Guide",
+            url: clinicPriceListUrl
+          }
+        ]
+      } satisfies VerifiedAnswer;
+    }
+
+    return {
+      id: "price-guide",
+      questionPatterns: ["price", "cost", "pricing", "how much"],
+      answer: `You can view the full Clinic C pricing guide here: ${clinicPriceListUrl}`,
+      suggestions: [
+        {
+          label: "Open Pricing Guide",
+          url: clinicPriceListUrl
+        }
+      ]
+    } satisfies VerifiedAnswer;
+  }
 
   if (
     containsAll(normalized, ["offer", "parking"]) ||
