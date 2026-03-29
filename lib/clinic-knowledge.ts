@@ -347,6 +347,30 @@ export const verifiedAnswers: VerifiedAnswer[] = [
     ]
   },
   {
+    id: "acne-consultation-first",
+    questionPatterns: [
+      "acne",
+      "spots",
+      "breakouts",
+      "blemishes",
+      "acne scars",
+      "what treatment is best for acne",
+      "best treatment for acne"
+    ],
+    answer:
+      "If acne or breakout-prone skin is the concern, Clinic C would advise a consultation first so the team can assess your skin properly and recommend the most suitable treatment plan for you. Acne can have different causes and levels of severity, so it is better not to assume one treatment is best without first reviewing your skin in more detail.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
     id: "profhilo-suitability",
     questionPatterns: [
       "who is profhilo for",
