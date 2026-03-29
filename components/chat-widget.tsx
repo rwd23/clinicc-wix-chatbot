@@ -18,8 +18,8 @@ type Message = {
   }>;
 };
 
-const STORAGE_KEY = "clinicc-widget-messages";
-const BUILD_LABEL = "Knowledge v3";
+const STORAGE_KEY = "clinicc-widget-messages-v2";
+const BUILD_LABEL = "Knowledge v4";
 let messageCounter = 0;
 
 function formatDateForClinic(date: Date) {
