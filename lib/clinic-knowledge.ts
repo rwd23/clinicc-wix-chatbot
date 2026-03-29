@@ -358,7 +358,230 @@ export const verifiedAnswers: VerifiedAnswer[] = [
       "best treatment for acne"
     ],
     answer:
-      "If acne or breakout-prone skin is the concern, Clinic C would advise a consultation first so the team can assess your skin properly and recommend the most suitable treatment plan for you. Acne can have different causes and levels of severity, so it is better not to assume one treatment is best without first reviewing your skin in more detail.",
+      "If acne or breakout-prone skin is the concern, the best first step at Clinic C would be a consultation. That gives the team a chance to assess your skin properly and guide you towards the treatment plan that suits you best, rather than assuming there is one universal answer for every type of acne.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "rosacea-consultation-first",
+    questionPatterns: [
+      "rosacea",
+      "redness",
+      "flushing",
+      "what treatment is best for rosacea",
+      "best treatment for rosacea"
+    ],
+    answer:
+      "If rosacea, redness, or flushing is the concern, the best starting point at Clinic C would be a consultation. That allows the team to assess your skin carefully and recommend the most appropriate plan for you, rather than jumping straight to one treatment without understanding the full picture.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "pigmentation-consultation-first",
+    questionPatterns: [
+      "pigmentation",
+      "sun damage",
+      "dark spots",
+      "uneven skin tone",
+      "what treatment is best for pigmentation",
+      "best treatment for pigmentation"
+    ],
+    answer:
+      "If pigmentation, sun damage, or uneven tone is the concern, Clinic C would advise a consultation first. Pigmentation can behave quite differently depending on the cause, so the right approach is to assess your skin properly first and then recommend the treatment plan that fits best.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "melasma-consultation-first",
+    questionPatterns: [
+      "melasma",
+      "what treatment is best for melasma",
+      "best treatment for melasma"
+    ],
+    answer:
+      "If melasma is the concern, the best first step at Clinic C would be a consultation. Melasma can be more complex than it first appears, so it is much better to have your skin reviewed properly and then be guided towards the safest and most suitable plan.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "sensitivity-consultation-first",
+    questionPatterns: [
+      "sensitive skin",
+      "sensitivity",
+      "reactive skin",
+      "irritated skin",
+      "what treatment is best for sensitive skin",
+      "best treatment for sensitive skin"
+    ],
+    answer:
+      "If sensitive or reactive skin is the concern, Clinic C would advise starting with a consultation. That allows the team to understand your skin more carefully and recommend an approach that feels appropriate and considered, rather than risking the wrong treatment too soon.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "scarring-consultation-first",
+    questionPatterns: [
+      "scarring",
+      "scar",
+      "acne scars",
+      "what treatment is best for scarring",
+      "best treatment for scarring"
+    ],
+    answer:
+      "If scarring or acne scarring is the concern, the best next step at Clinic C would be a consultation first. That gives the team the chance to assess the type and depth of scarring and then recommend the most appropriate treatment plan for your skin.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "dull-skin-consultation-first",
+    questionPatterns: [
+      "dull skin",
+      "tired skin",
+      "glow",
+      "what treatment is best for dull skin",
+      "best treatment for dull skin"
+    ],
+    answer:
+      "If dull or tired-looking skin is the concern, Clinic C would still advise a consultation first. That way, the team can understand what your skin needs and guide you towards the right plan, whether that is more hydration-focused, more resurfacing-led, or centred around overall skin quality.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "ageing-consultation-first",
+    questionPatterns: [
+      "ageing",
+      "aging",
+      "fine lines",
+      "lines and wrinkles",
+      "what treatment is best for ageing",
+      "what treatment is best for aging",
+      "best treatment for wrinkles"
+    ],
+    answer:
+      "If the main concern is ageing, fine lines, or wrinkles, the best first step at Clinic C would be a consultation. That allows the team to understand whether the priority is lines, skin quality, hydration, firmness, or a combination of those, and then guide you towards the most suitable plan.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "unwanted-hair-consultation-first",
+    questionPatterns: [
+      "unwanted hair",
+      "hair growth",
+      "facial hair",
+      "body hair",
+      "what treatment is best for unwanted hair",
+      "best treatment for unwanted hair"
+    ],
+    answer:
+      "If unwanted hair is the concern, Clinic C would usually advise a laser consultation first. That gives the team the chance to confirm the area, skin type, and the most suitable treatment plan for you before moving ahead.",
+    suggestions: [
+      {
+        label: "View Laser Hair Removal",
+        url: "https://www.clinicc.co.uk/it/laser-hair-removal"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "skin-tags-consultation-first",
+    questionPatterns: [
+      "skin tag",
+      "skin tags",
+      "what treatment is best for skin tags",
+      "best treatment for skin tags"
+    ],
+    answer:
+      "If skin tags are the concern, Clinic C would advise a consultation first so the area can be assessed properly and the most suitable next step can be recommended. For concerns like this, it is always better to review the skin in person before assuming treatment.",
+    suggestions: [
+      {
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
+      },
+      {
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
+      }
+    ]
+  },
+  {
+    id: "warts-consultation-first",
+    questionPatterns: [
+      "wart",
+      "warts",
+      "verruca",
+      "verrucas",
+      "what treatment is best for warts",
+      "best treatment for warts"
+    ],
+    answer:
+      "If warts or verrucas are the concern, Clinic C would advise a consultation first so the area can be assessed properly and the most appropriate next step can be recommended. It is always better to review the skin carefully before deciding on treatment.",
     suggestions: [
       {
         label: "View Face Treatments",
