@@ -30,8 +30,9 @@ export const clinicAssistantConfig = {
   disclaimer:
     "General information only. This assistant does not provide diagnosis, prescribe treatment, or replace a consultation with your clinician.",
   inputPlaceholder: "Ask about treatments, aftercare, downtime, or booking...",
-  bookingUrl: "https://www.clinicc.co.uk/contact",
-  contactUrl: "https://www.clinicc.co.uk/contact",
+  homepageUrl: "https://www.clinicc.co.uk/",
+  bookingUrl: "https://www.clinicc.co.uk/book-online",
+  contactUrl: "https://www.clinicc.co.uk/",
   treatmentsUrl: "https://www.clinicc.co.uk/face",
   bodyUrl: "https://www.clinicc.co.uk/body",
   laserUrl: "https://www.clinicc.co.uk/it/laser-hair-removal",
@@ -70,7 +71,7 @@ export const clinicAssistantConfig = {
       category: "aesthetics",
       conversionType: "consultation-first",
       primaryCtaLabel: "Arrange consultation",
-      primaryCtaUrl: "https://www.clinicc.co.uk/contact",
+      primaryCtaUrl: "https://www.clinicc.co.uk/anti-wrinkle-injections-in-aberdeen",
       goals: ["soften lines", "smooth forehead", "reduce crow's feet", "prevent deeper wrinkles"],
       keywords: ["wrinkle", "wrinkles", "botox", "anti wrinkle", "anti-wrinkle", "forehead", "crow's feet", "frown lines"],
       summary:
@@ -86,7 +87,7 @@ export const clinicAssistantConfig = {
       category: "laser",
       conversionType: "consultation-first",
       primaryCtaLabel: "Book laser consultation",
-      primaryCtaUrl: "https://www.clinicc.co.uk/contact",
+      primaryCtaUrl: "https://www.clinicc.co.uk/it/laser-hair-removal",
       goals: ["reduce unwanted hair", "avoid shaving", "ingrown hairs", "long-term hair reduction"],
       keywords: ["laser", "hair removal", "hair", "underarms", "bikini", "legs", "pcos", "ingrown"],
       summary:
@@ -118,7 +119,7 @@ export const clinicAssistantConfig = {
       category: "aesthetics",
       conversionType: "consultation-first",
       primaryCtaLabel: "Arrange consultation",
-      primaryCtaUrl: "https://www.clinicc.co.uk/contact",
+      primaryCtaUrl: "https://www.clinicc.co.uk/profhilo-in-aberdeen",
       goals: ["skin quality", "firmness", "hydration", "dull tired skin"],
       keywords: ["profhilo", "skin booster", "tired skin", "firmness", "luminous"],
       summary:
@@ -134,7 +135,7 @@ export const clinicAssistantConfig = {
       category: "aesthetics",
       conversionType: "consultation-first",
       primaryCtaLabel: "Arrange consultation",
-      primaryCtaUrl: "https://www.clinicc.co.uk/contact",
+      primaryCtaUrl: "https://www.clinicc.co.uk/jalupro-in-aberdeen",
       goals: ["skin revitalisation", "fine lines", "tired eyes", "texture"],
       keywords: ["jalupro", "skin booster", "under eyes", "revitalise", "texture"],
       summary:
@@ -150,7 +151,7 @@ export const clinicAssistantConfig = {
       category: "aesthetics",
       conversionType: "enquiry-first",
       primaryCtaLabel: "Send an enquiry",
-      primaryCtaUrl: "https://www.clinicc.co.uk/contact",
+      primaryCtaUrl: "https://www.clinicc.co.uk/aqualyx-fat-dissolving-in-aberdeen",
       goals: ["stubborn fat", "contouring", "double chin", "localised fat"],
       keywords: ["aqualyx", "fat dissolving", "stubborn fat", "double chin", "contouring", "chin fat"],
       summary:
@@ -166,7 +167,7 @@ export const clinicAssistantConfig = {
       category: "aesthetics",
       conversionType: "consultation-first",
       primaryCtaLabel: "Book body consultation",
-      primaryCtaUrl: "https://www.clinicc.co.uk/contact",
+      primaryCtaUrl: "https://www.clinicc.co.uk/emsculpt-in-aberdeen",
       goals: ["tone abdomen", "tone glutes", "build muscle", "body contouring"],
       keywords: ["emsculpt", "tone", "muscle", "glutes", "abdomen", "abs"],
       summary:
@@ -182,7 +183,7 @@ export const clinicAssistantConfig = {
       category: "health",
       conversionType: "consultation-first",
       primaryCtaLabel: "Book health consultation",
-      primaryCtaUrl: "https://www.clinicc.co.uk/contact",
+      primaryCtaUrl: "https://www.clinicc.co.uk/health-clinic-in-aberdeen",
       goals: ["energy", "immune support", "wellbeing", "hydration"],
       keywords: ["iv", "iv therapy", "drip", "energy", "immune", "wellbeing", "vitamin"],
       summary:
