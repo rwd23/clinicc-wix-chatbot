@@ -14,6 +14,17 @@ export type TreatmentPrice = {
   answer: string;
 };
 
+export type TreatmentFaq = {
+  id: string;
+  treatmentAliases: string[];
+  questionPatterns: string[];
+  answer: string;
+  suggestions?: Array<{
+    label: string;
+    url: string;
+  }>;
+};
+
 export const clinicPriceListUrl =
   "https://www.clinicc.co.uk/_files/ugd/2d1435_5bbb0b8d019b42128cac3214d5d37b19.pdf";
 
@@ -733,6 +744,181 @@ export const treatmentPrices: TreatmentPrice[] = [
   }
 ] as const;
 
+export const treatmentFaqs: TreatmentFaq[] = [
+  {
+    id: "hydrafacial-duration",
+    treatmentAliases: ["hydrafacial", "hydra facial"],
+    questionPatterns: ["how long", "last", "take", "duration", "treatment time"],
+    answer:
+      "A HydraFacial at Clinic C typically takes between 30 and 60 minutes, depending on your skin concerns. It is designed to be a quick, non-invasive treatment with no downtime, which makes it a very easy treatment to fit into a busy schedule.",
+    suggestions: [
+      { label: "View HydraFacial", url: "https://www.clinicc.co.uk/hydrafacial-in-aberdeen" }
+    ]
+  },
+  {
+    id: "hydrafacial-results",
+    treatmentAliases: ["hydrafacial", "hydra facial"],
+    questionPatterns: ["results", "how soon", "when will i see", "when can i see", "glow"],
+    answer:
+      "Clinic C says many clients see an improvement in their skin straight after one HydraFacial treatment. The fresh, hydrated glow often lasts around 5 to 7 days or sometimes longer, and monthly treatments are recommended for maintaining the best ongoing results.",
+    suggestions: [
+      { label: "View HydraFacial", url: "https://www.clinicc.co.uk/hydrafacial-in-aberdeen" }
+    ]
+  },
+  {
+    id: "hydrafacial-acne",
+    treatmentAliases: ["hydrafacial", "hydra facial"],
+    questionPatterns: ["acne", "breakouts", "congestion", "blackheads"],
+    answer:
+      "Yes, Clinic C describes HydraFacial as a strong option for acne-prone or congested skin because it deeply cleanses pores, removes impurities, and hydrates the skin at the same time. Many clients choose it as part of a regular routine to help improve breakouts and congestion.",
+    suggestions: [
+      { label: "View HydraFacial", url: "https://www.clinicc.co.uk/hydrafacial-in-aberdeen" }
+    ]
+  },
+  {
+    id: "anti-wrinkle-how-it-works",
+    treatmentAliases: ["anti wrinkle", "anti-wrinkle", "botox", "wrinkle injections"],
+    questionPatterns: ["how does it work", "how do they work", "how work", "work"],
+    answer:
+      "Clinic C explains that anti-wrinkle injections work by relaxing the facial muscles that create expression lines. By temporarily reducing that muscle movement, the skin appears smoother and lines across the forehead, frown area, and around the eyes can soften noticeably.",
+    suggestions: [
+      {
+        label: "View Anti-Wrinkle Injections",
+        url: "https://www.clinicc.co.uk/anti-wrinkle-injections-in-aberdeen"
+      }
+    ]
+  },
+  {
+    id: "anti-wrinkle-areas",
+    treatmentAliases: ["anti wrinkle", "anti-wrinkle", "botox", "wrinkle injections"],
+    questionPatterns: ["what areas", "areas", "where can", "treat"],
+    answer:
+      "Clinic C says anti-wrinkle injections are commonly used for forehead lines, frown lines between the brows, and crow's feet around the eyes. The clinic also notes that more advanced areas can include jaw slimming, gummy smile correction, and neck rejuvenation.",
+    suggestions: [
+      {
+        label: "View Anti-Wrinkle Injections",
+        url: "https://www.clinicc.co.uk/anti-wrinkle-injections-in-aberdeen"
+      }
+    ]
+  },
+  {
+    id: "anti-wrinkle-duration",
+    treatmentAliases: ["anti wrinkle", "anti-wrinkle", "botox", "wrinkle injections"],
+    questionPatterns: ["how long", "last", "duration"],
+    answer:
+      "Clinic C says results from anti-wrinkle injections typically last around 3 to 4 months. With regular treatments, results may last a little longer over time as the muscles become more trained to relax.",
+    suggestions: [
+      {
+        label: "View Anti-Wrinkle Injections",
+        url: "https://www.clinicc.co.uk/anti-wrinkle-injections-in-aberdeen"
+      }
+    ]
+  },
+  {
+    id: "anti-wrinkle-results-timing-faq",
+    treatmentAliases: ["anti wrinkle", "anti-wrinkle", "botox", "wrinkle injections"],
+    questionPatterns: ["how soon", "when will i see", "when can i see", "results", "how long to see results"],
+    answer:
+      "Clinic C says you may begin to notice the effect of anti-wrinkle injections within 3 to 5 days, with full results typically developing over 10 to 14 days. A follow-up appointment may also be recommended to review your result.",
+    suggestions: [
+      {
+        label: "View Anti-Wrinkle Injections",
+        url: "https://www.clinicc.co.uk/anti-wrinkle-injections-in-aberdeen"
+      }
+    ]
+  },
+  {
+    id: "jalupro-suitable",
+    treatmentAliases: ["jalupro"],
+    questionPatterns: ["who is it for", "suitable", "who is suitable", "good for"],
+    answer:
+      "Clinic C describes Jalupro as ideal for clients who want to improve skin quality, hydration, and early signs of ageing. It is positioned as a natural-looking skin rejuvenation treatment for those who want refreshed skin quality rather than added facial volume.",
+    suggestions: [
+      { label: "View Jalupro", url: "https://www.clinicc.co.uk/jalupro-in-aberdeen" }
+    ]
+  },
+  {
+    id: "jalupro-vs-fillers",
+    treatmentAliases: ["jalupro"],
+    questionPatterns: ["different from filler", "different from dermal fillers", "fillers", "difference"],
+    answer:
+      "Clinic C explains that Jalupro is different from dermal fillers because it does not add volume or change facial shape. Instead, it focuses on improving skin quality by stimulating collagen and enhancing hydration, which makes it better suited to subtle, natural-looking rejuvenation.",
+    suggestions: [
+      { label: "View Jalupro", url: "https://www.clinicc.co.uk/jalupro-in-aberdeen" }
+    ]
+  },
+  {
+    id: "jalupro-areas",
+    treatmentAliases: ["jalupro"],
+    questionPatterns: ["what areas", "areas", "where can", "treat"],
+    answer:
+      "Clinic C says Jalupro can be used on the face, neck, décolletage, and under-eye area. It is presented as particularly effective where there are fine lines, skin laxity, or early signs of ageing.",
+    suggestions: [
+      { label: "View Jalupro", url: "https://www.clinicc.co.uk/jalupro-in-aberdeen" }
+    ]
+  },
+  {
+    id: "jalupro-results",
+    treatmentAliases: ["jalupro"],
+    questionPatterns: ["when will i see", "how soon", "results", "when can i see"],
+    answer:
+      "Clinic C says many clients notice an improvement in hydration and skin texture within a few days of Jalupro, with continued improvement over the following weeks as collagen production increases.",
+    suggestions: [
+      { label: "View Jalupro", url: "https://www.clinicc.co.uk/jalupro-in-aberdeen" }
+    ]
+  },
+  {
+    id: "jalupro-benefits",
+    treatmentAliases: ["jalupro"],
+    questionPatterns: ["benefits", "what does it help with", "what does jalupro do"],
+    answer:
+      "Clinic C describes Jalupro as helping to improve hydration, elasticity, and firmness while reducing the appearance of fine lines and wrinkles. The overall goal is smoother, healthier, more refreshed-looking skin.",
+    suggestions: [
+      { label: "View Jalupro", url: "https://www.clinicc.co.uk/jalupro-in-aberdeen" }
+    ]
+  },
+  {
+    id: "profhilo-how-it-works",
+    treatmentAliases: ["profhilo"],
+    questionPatterns: ["how does it work", "how work", "what does it do"],
+    answer:
+      "Clinic C describes Profhilo as an injectable skin remodelling treatment with a very high concentration of hyaluronic acid. It acts more as a deep hydrator than a traditional filler, helping skin that feels dull, tired, or lacking in elasticity to look firmer, more luminous, and better hydrated.",
+    suggestions: [
+      { label: "View Profhilo", url: "https://www.clinicc.co.uk/profhilo-in-aberdeen" }
+    ]
+  },
+  {
+    id: "profhilo-results",
+    treatmentAliases: ["profhilo"],
+    questionPatterns: ["when will i see", "how soon", "results", "when can i see"],
+    answer:
+      "Clinic C says the initial hydrating effect of Profhilo can start to show within 3 to 5 days. The skin-tightening and collagen-stimulating effect continues to build over the following weeks, with the maximum effect usually seen around 2 months after the second treatment.",
+    suggestions: [
+      { label: "View Profhilo", url: "https://www.clinicc.co.uk/profhilo-in-aberdeen" }
+    ]
+  },
+  {
+    id: "emsculpt-recovery",
+    treatmentAliases: ["emsculpt"],
+    questionPatterns: ["recovery", "downtime", "aftercare", "after care"],
+    answer:
+      "Clinic C says EMSculpt is non-invasive and requires no recovery time. There is no special preparation or aftercare plan, although some clients do notice mild soreness or tiredness in the treated area afterwards, more like a workout than a medical recovery.",
+    suggestions: [
+      { label: "View EMSculpt", url: "https://www.clinicc.co.uk/emsculpt-in-aberdeen" }
+    ]
+  },
+  {
+    id: "emsculpt-pain",
+    treatmentAliases: ["emsculpt"],
+    questionPatterns: ["hurt", "pain", "painful", "does it hurt"],
+    answer:
+      "Clinic C says EMSculpt should not be painful. Clients often describe the sensation more as a strong pulling or contracting feeling, and the therapist can control the intensity so it remains comfortable throughout the session.",
+    suggestions: [
+      { label: "View EMSculpt", url: "https://www.clinicc.co.uk/emsculpt-in-aberdeen" }
+    ]
+  }
+] as const;
+
 export const groundingRules = [
   "If a question matches verified clinic information, use that answer instead of improvising.",
   "If an answer is not verified, do not guess or make up details.",
@@ -750,6 +936,21 @@ function containsAll(normalized: string, parts: string[]) {
 
 export function findDeterministicClinicAnswer(userMessage: string) {
   const normalized = normalize(userMessage);
+
+  const matchedFaq = treatmentFaqs.find((entry) =>
+    entry.treatmentAliases.some((alias) => normalized.includes(normalize(alias))) &&
+    entry.questionPatterns.some((pattern) => normalized.includes(normalize(pattern)))
+  );
+
+  if (matchedFaq) {
+    return {
+      id: `faq-${matchedFaq.id}`,
+      questionPatterns: [...matchedFaq.treatmentAliases, ...matchedFaq.questionPatterns],
+      answer: matchedFaq.answer,
+      suggestions: matchedFaq.suggestions ?? []
+    } satisfies VerifiedAnswer;
+  }
+
   const isPriceQuestion =
     normalized.includes("how much") ||
     normalized.includes("price") ||
