@@ -359,14 +359,28 @@ export function ChatWidget() {
           className="widget-launcher"
           onClick={() => setIsOpen(true)}
           type="button"
+          aria-label="Open Clinic C assistant"
         >
           <span className="widget-launcher-glow" aria-hidden="true" />
-          <span className="widget-launcher-mark" aria-hidden="true">
-            {clinicAssistantConfig.assistantName.slice(0, 1)}
-          </span>
-          <span className="widget-launcher-copy">
-            <strong>{clinicAssistantConfig.assistantName}</strong>
-            <span>Ask Clinic C</span>
+          <span className="widget-launcher-logo" aria-hidden="true">
+            <svg viewBox="0 0 100 100" className="widget-launcher-svg">
+              <circle cx="50" cy="50" r="46" className="launcher-ring" />
+              <circle cx="50" cy="50" r="38" className="launcher-ring-inner" />
+              <path
+                className="launcher-c"
+                d="M64 28
+                   C58 22, 49 19, 40 21
+                   C28 24, 20 35, 20 50
+                   C20 65, 29 76, 42 79
+                   C50 81, 58 79, 64 74
+                   L57 67
+                   C53 70, 48 71, 43 70
+                   C34 68, 28 60, 28 50
+                   C28 40, 34 32, 43 30
+                   C48 29, 53 30, 57 34
+                   L64 28 Z"
+              />
+            </svg>
           </span>
         </button>
       )}
