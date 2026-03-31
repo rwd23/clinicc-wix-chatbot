@@ -248,7 +248,7 @@ export function ChatWidget() {
 
     const nextLength = Math.min(
       target.length,
-      current.length + Math.max(2, Math.ceil(target.length / 40))
+      current.length + 1
     );
 
     const timeout = window.setTimeout(() => {
@@ -263,7 +263,7 @@ export function ChatWidget() {
             : message
         )
       );
-    }, 24);
+    }, 34);
 
     return () => window.clearTimeout(timeout);
   }, [messages]);
