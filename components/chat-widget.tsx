@@ -373,6 +373,7 @@ export function ChatWidget() {
 
       {isOpen && <div className="widget-backdrop" onClick={() => setIsOpen(false)} />}
 
+      {isOpen && (
       <div className="widget-card">
         <header className="widget-header">
           <div className="widget-avatar" aria-hidden="true">
@@ -548,6 +549,7 @@ export function ChatWidget() {
           </form>
         </div>
       </div>
+      )}
     </section>
   );
 }

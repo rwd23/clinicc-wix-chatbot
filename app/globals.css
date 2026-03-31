@@ -170,19 +170,7 @@ a {
 }
 
 .widget-shell.is-closed {
-  min-height: 180px;
-}
-
-.widget-shell.is-closed .widget-card {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(18px) scale(0.98);
-}
-
-.widget-shell.is-open .widget-card {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0) scale(1);
+  min-height: 132px;
 }
 
 .widget-launcher {
@@ -200,6 +188,8 @@ a {
   overflow: hidden;
   isolation: isolate;
   animation: launcherDrift 4.2s ease-in-out infinite;
+  min-width: 220px;
+  justify-content: flex-start;
 }
 
 .widget-launcher-glow {
@@ -240,11 +230,13 @@ a {
 .widget-launcher-copy strong {
   font-size: 1rem;
   font-weight: 650;
+  line-height: 1.1;
 }
 
 .widget-launcher-copy span {
   font-size: 0.82rem;
   opacity: 0.84;
+  line-height: 1.2;
 }
 
 .widget-backdrop {
@@ -297,6 +289,7 @@ a {
   transition:
     opacity 260ms ease,
     transform 260ms ease;
+  animation: cardReveal 260ms ease-out;
 }
 
 .widget-card::before {
@@ -680,6 +673,17 @@ a {
   }
 }
 
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes auraFloat {
   0%,
   100% {
@@ -760,6 +764,15 @@ a {
 
   .widget-shell.is-closed {
     min-height: 120px;
+  }
+
+  .widget-launcher {
+    min-width: 76px;
+    padding-right: 14px;
+  }
+
+  .widget-launcher-copy {
+    display: none;
   }
 
   .widget-card {
