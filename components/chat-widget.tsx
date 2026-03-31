@@ -12,6 +12,8 @@ type Message = {
   id: string;
   role: "user" | "assistant";
   content: string;
+  displayContent?: string;
+  isStreaming?: boolean;
   suggestions?: Array<{
     label: string;
     url: string;
@@ -170,7 +172,8 @@ function createAssistantMessage(content: string): Message {
   return {
     id: createMessageId("assistant"),
     role: "assistant",
-    content
+    content,
+    displayContent: content
   };
 }
 
@@ -178,7 +181,8 @@ function createUserMessage(content: string): Message {
   return {
     id: createMessageId("user"),
     role: "user",
-    content
+    content,
+    displayContent: content
   };
 }
 
@@ -188,6 +192,7 @@ export function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [draft, setDraft] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const viewportRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -197,7 +202,13 @@ export function ChatWidget() {
     try {
       const parsed = JSON.parse(saved) as Message[];
       if (parsed.length) {
-        setMessages(parsed);
+        setMessages(
+          parsed.map((message) => ({
+            ...message,
+            displayContent: message.displayContent ?? message.content,
+            isStreaming: false
+          }))
+        );
       }
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
@@ -213,6 +224,49 @@ export function ChatWidget() {
   }, [messages]);
 
   const canSend = draft.trim().length > 0 && !isLoading;
+
+  useEffect(() => {
+    const activeStream = messages.find(
+      (message) => message.role === "assistant" && message.isStreaming
+    );
+
+    if (!activeStream) return;
+
+    const target = activeStream.content;
+    const current = activeStream.displayContent ?? "";
+
+    if (current.length >= target.length) {
+      setMessages((existing) =>
+        existing.map((message) =>
+          message.id === activeStream.id
+            ? { ...message, displayContent: target, isStreaming: false }
+            : message
+        )
+      );
+      return;
+    }
+
+    const nextLength = Math.min(
+      target.length,
+      current.length + Math.max(2, Math.ceil(target.length / 40))
+    );
+
+    const timeout = window.setTimeout(() => {
+      setMessages((existing) =>
+        existing.map((message) =>
+          message.id === activeStream.id
+            ? {
+                ...message,
+                displayContent: target.slice(0, nextLength),
+                isStreaming: nextLength < target.length
+              }
+            : message
+        )
+      );
+    }, 24);
+
+    return () => window.clearTimeout(timeout);
+  }, [messages]);
 
   function resetChat() {
     window.localStorage.removeItem(STORAGE_KEY);
@@ -231,12 +285,16 @@ export function ChatWidget() {
 
     const operationalReply = buildOperationalReply(trimmed);
     if (operationalReply) {
+      const assistantMessage = {
+        ...createAssistantMessage(operationalReply.reply),
+        displayContent: "",
+        isStreaming: true,
+        suggestions: operationalReply.suggestions
+      };
+
       setMessages((current) => [
         ...current,
-        {
-          ...createAssistantMessage(operationalReply.reply),
-          suggestions: operationalReply.suggestions
-        }
+        assistantMessage
       ]);
       return;
     }
@@ -265,19 +323,29 @@ export function ChatWidget() {
         data.reply ??
         "I can help you think through treatments, expectations, and next steps. Tell me what you'd like help with.";
 
+      const assistantMessage = {
+        ...createAssistantMessage(reply),
+        displayContent: "",
+        isStreaming: true,
+        suggestions: data.suggestions ?? []
+      };
+
       setMessages((current) => [
         ...current,
-        {
-          ...createAssistantMessage(reply),
-          suggestions: data.suggestions ?? []
-        }
+        assistantMessage
       ]);
     } catch {
+      const fallbackMessage = {
+        ...createAssistantMessage(
+          "I'm having a brief connection issue right now. Please try again in a moment, or use the booking link below and the team can help directly."
+        ),
+        displayContent: "",
+        isStreaming: true
+      };
+
       setMessages((current) => [
         ...current,
-        createAssistantMessage(
-          "I'm having a brief connection issue right now. Please try again in a moment, or use the booking link below and the team can help directly."
-        )
+        fallbackMessage
       ]);
     } finally {
       setIsLoading(false);
@@ -285,7 +353,26 @@ export function ChatWidget() {
   }
 
   return (
-    <section className="widget-shell">
+    <section className={`widget-shell ${isOpen ? "is-open" : "is-closed"}`}>
+      {!isOpen && (
+        <button
+          className="widget-launcher"
+          onClick={() => setIsOpen(true)}
+          type="button"
+        >
+          <span className="widget-launcher-glow" aria-hidden="true" />
+          <span className="widget-launcher-mark" aria-hidden="true">
+            {clinicAssistantConfig.assistantName.slice(0, 1)}
+          </span>
+          <span className="widget-launcher-copy">
+            <strong>{clinicAssistantConfig.assistantName}</strong>
+            <span>Ask Clinic C</span>
+          </span>
+        </button>
+      )}
+
+      {isOpen && <div className="widget-backdrop" onClick={() => setIsOpen(false)} />}
+
       <div className="widget-card">
         <header className="widget-header">
           <div className="widget-avatar" aria-hidden="true">
@@ -303,6 +390,15 @@ export function ChatWidget() {
             <span className="status-dot" />
             {clinicAssistantConfig.status}
           </div>
+
+          <button
+            className="widget-close"
+            onClick={() => setIsOpen(false)}
+            type="button"
+          >
+            <span />
+            <span />
+          </button>
         </header>
 
         <div className="widget-tools">
@@ -324,8 +420,11 @@ export function ChatWidget() {
               key={message.id}
             >
               {message.role === "assistant" && <span className="speaker-label">{clinicAssistantConfig.assistantName}</span>}
-              <div className="message-bubble">
-                <p>{formatMessageForDisplay(message.content).trim()}</p>
+              <div className={`message-bubble ${message.role === "assistant" ? "is-assistant-bubble" : ""}`}>
+                <p>{formatMessageForDisplay(message.displayContent ?? message.content).trim()}</p>
+                {message.role === "assistant" && message.isStreaming && (
+                  <span className="typing-caret" aria-hidden="true" />
+                )}
                 {!!message.suggestions?.length && (
                   <div className="message-actions">
                     {message.suggestions.map((suggestion) => (
