@@ -192,8 +192,8 @@ export const verifiedAnswers: VerifiedAnswer[] = [
       "Clinic C's Terms & Conditions state that all bookings require a minimum 50% deposit at the time of booking, whether the booking is made in person or through the online booking system.",
     suggestions: [
       {
-        label: "View Terms & Conditions",
-        url: "https://www.clinicc.co.uk/faq-s"
+        label: "Open Book Online",
+        url: "https://www.clinicc.co.uk/book-online"
       }
     ]
   },
@@ -265,8 +265,8 @@ export const verifiedAnswers: VerifiedAnswer[] = [
       "Clinic C describes aftercare as part of the client journey, but aftercare advice varies by treatment. The safest answer is to follow the personalised guidance given by your clinician after your appointment. If you tell me which treatment you're asking about, I can give a more specific, website-grounded answer where one is available.",
     suggestions: [
       {
-        label: "View FAQ",
-        url: "https://www.clinicc.co.uk/faq-s"
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
       }
     ]
   },
@@ -701,11 +701,11 @@ export const verifiedAnswers: VerifiedAnswer[] = [
       "do you have an faq"
     ],
     answer:
-      "Yes, Clinic C has a public FAQ page on the website. If you want, I can also help direct you to the most relevant treatment page based on what you're asking about.",
+      "Clinic C now places FAQs directly on each treatment page rather than in one central FAQ page. If you tell me which treatment you mean, I can guide you to the most relevant page and answer from there.",
     suggestions: [
       {
-        label: "View FAQ",
-        url: "https://www.clinicc.co.uk/faq-s"
+        label: "View Face Treatments",
+        url: "https://www.clinicc.co.uk/face"
       }
     ]
   }
