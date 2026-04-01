@@ -39,6 +39,7 @@ export const clinicAssistantConfig = {
   healthUrl: "https://www.clinicc.co.uk/health-clinic-in-aberdeen",
   cryotherapyUrl: "https://www.clinicc.co.uk/cryotherapy-in-aberdeen",
   phone: "01224 454145",
+  whatsappNumber: "441224454145",
   email: "info@clinic-c.co.uk",
   address: "365 Holburn Street, Aberdeen, AB10 7FQ",
   quickPrompts: [

@@ -591,9 +591,24 @@ a {
 
 .cta-row {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: auto repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 12px;
+}
+
+.cta-whatsapp {
+  width: 48px;
+  min-width: 48px;
+  padding: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #25d366 0%, #1fb857 100%);
+  border-color: rgba(21, 128, 61, 0.18);
+  box-shadow: 0 14px 28px rgba(37, 211, 102, 0.22);
+}
+
+.whatsapp-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .composer {
@@ -785,7 +800,7 @@ a {
   }
 
   .cta-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: auto 1fr 1fr;
   }
 
   .message-bubble {

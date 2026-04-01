@@ -224,6 +224,9 @@ export function ChatWidget() {
   }, [messages]);
 
   const canSend = draft.trim().length > 0 && !isLoading;
+  const whatsAppUrl = `https://wa.me/${clinicAssistantConfig.whatsappNumber}?text=${encodeURIComponent(
+    "Hi Clinic C, I'd like to ask about treatment options."
+  )}`;
 
   useEffect(() => {
     const activeStream = messages.find(
@@ -516,6 +519,20 @@ export function ChatWidget() {
           <p className="widget-disclaimer">{clinicAssistantConfig.disclaimer}</p>
 
           <div className="cta-row">
+            <a
+              aria-label="Chat on WhatsApp"
+              className="cta-button cta-whatsapp"
+              href={whatsAppUrl}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <svg aria-hidden="true" className="whatsapp-icon" viewBox="0 0 24 24">
+                <path
+                  d="M20.52 3.48A11.86 11.86 0 0 0 12.07 0C5.5 0 .15 5.35.15 11.92c0 2.1.55 4.14 1.59 5.94L0 24l6.32-1.66a11.9 11.9 0 0 0 5.75 1.47h.01c6.57 0 11.92-5.35 11.92-11.92 0-3.18-1.24-6.17-3.48-8.41Zm-8.45 18.3h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.75.98 1-3.66-.23-.38a9.88 9.88 0 0 1-1.51-5.21c0-5.46 4.44-9.9 9.91-9.9 2.64 0 5.13 1.03 7 2.9a9.83 9.83 0 0 1 2.9 7c0 5.46-4.45 9.9-9.91 9.9Zm5.43-7.42c-.3-.15-1.77-.87-2.05-.97-.27-.1-.47-.15-.67.15-.2.3-.76.97-.94 1.17-.17.2-.35.22-.65.08-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.64-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.08-.8.37-.27.3-1.05 1.02-1.05 2.5 0 1.47 1.08 2.9 1.23 3.1.15.2 2.12 3.24 5.13 4.54.72.31 1.29.5 1.73.64.73.23 1.4.2 1.92.12.59-.09 1.77-.72 2.02-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </a>
             <a
               className="cta-button cta-secondary"
               href={clinicAssistantConfig.contactUrl}
